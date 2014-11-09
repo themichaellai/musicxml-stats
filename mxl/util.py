@@ -1,24 +1,3 @@
-def pitch_to_string(pitch_tag):
-    pitch_type = extract_text(pitch_tag, 'type')
-    step = extract_text(pitch_tag, 'pitch step')
-    return '%s (%s)' % (step, pitch_type)
-
-
-def rest_to_string(rest_tag):
-    t = rest_tag.select('type')
-    rest_type = extract_text(rest_tag, 'type')
-    return '%s rest' % (rest_type)
-
-
-def note_to_string(note_tag):
-    if note_tag('rest'):
-        return rest_to_string(note_tag)
-    elif note_tag('pitch'):
-        return pitch_to_string(note_tag)
-    else:
-        return 'ERROR'
-
-
 def key_to_string(key_tag):
     fifths, major_minor = extract_adjacent_nodes(key_tag, 'fifths', 'mode')
     return fifths, major_minor
