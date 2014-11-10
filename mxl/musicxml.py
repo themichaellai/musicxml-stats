@@ -11,22 +11,12 @@ class MXLFile(object):
         self.parts = [p for s in soup('score-partwise') for p in s('part')]
         self.measures = [Measure(m) for p in self.parts for m in p('measure')]
 
-
     def key_signature(self):
-        fifths, major_minor, _, _ = extract_measure_attributes(self.measures[0].bs_node)
+        fifths, major_minor, _, _ = extract_measure_attributes(
+            self.measures[0].bs_node)
         return fifths, major_minor
 
-
     def time_signature(self):
-        _, _, lower, upper = extract_measure_attributes(self.measures[0].bs_node)
+        _, _, lower, upper = extract_measure_attributes(
+            self.measures[0].bs_node)
         return lower, upper
-
-
-    def _print_children_names(self, measure):
-        for child in measure.bs_node.findChildren(recursive=False):
-            if child.name == 'note':
-                note = Note(child)
-                if not note.is_hidden():
-                    print note
-            else:
-                print child.name

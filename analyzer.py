@@ -6,7 +6,7 @@ if __name__ == '__main__':
     print len(mxlf.measures), 'measures'
     #for note in mxlf.measures[0].notes():
     #    print note
-    mxlf._print_children_names(mxlf.measures[0])
+    print 'melody stat', mxlf.measures[0].get_melody_stat()
     print mxlf.time_signature()
     print mxlf.key_signature()
     print len(mxlf.parts)
