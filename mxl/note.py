@@ -3,6 +3,11 @@ from util import extract_text
 
 NOTES = ('A', 'B', 'C', 'D', 'E', 'F', 'G')
 
+def is_hidden(bs_node):
+    if ('print-object' in bs_node.attrs and
+            bs_node['print-object'] == 'no'):
+        return True
+    return False
 
 class Note(object):
     def __init__(
@@ -14,6 +19,8 @@ class Note(object):
             self.step = extract_text(bs_node, 'pitch step')
             self.octave = extract_text(bs_node, 'pitch octave')
             self.staff = extract_text(bs_node, 'staff')
+            self.is_chord = bool(bs_node('chord'))
+            self.is_hidden = is_hidden(bs_node)
             if bs_node('rest'):
                 self.is_note = False
             else:
@@ -25,11 +32,8 @@ class Note(object):
             self.staff = staff
             self.is_note = is_note
 
-    def is_hidden(self):
-        if ('print-object' in self.bs_node.attrs and
-                self.bs_node['print-object'] == 'no'):
-            return True
-        return False
+    def should_show(self):
+        return not (self.is_hidden or self.is_chord)
 
     def __sub__(self, other):
         if other.octave == self.octave:
@@ -46,14 +50,16 @@ class Note(object):
     def __str__(self):
         staff_string = 'staff %s' % self.staff if self.staff else ''
         if self.is_note:
-            return '%s (%s) %s' % (self.step, self.pitch_type, staff_string)
+            return '%s (%s) %s chord: %s hidden: %s' % (
+                self.step, self.pitch_type, staff_string, self.is_chord, self.is_hidden)
         else:
             return 'rest (%s) %s' % (self.pitch_type, staff_string)
 
     def __repr__(self):
         if self.is_note:
             return '<Note: %s (%s) hidden: %s>' % (
-                self.step, self.pitch_type, self.is_hidden())
+                self.step, self.pitch_type, self.is_hidden)
         else:
             return '<Note: rest (%s) hidden: %s>' % (
-                self.pitch_type, self.is_hidden())
+                self.pitch_type, self.is_hidden)
+

@@ -9,7 +9,7 @@ class Measure(object):
     def notes(self, show_hidden=False):
         for n in self.bs_node.select('note'):
             note = Note(bs_node=n)
-            if show_hidden or not note.is_hidden():
+            if show_hidden or note.should_show():
                 yield note
 
     def get_melody_stat(self):
@@ -27,7 +27,7 @@ class Measure(object):
         for child in self.bs_node.findChildren(recursive=False):
             if child.name == 'note':
                 note = Note(bs_node=child)
-                if not note.is_hidden():
+                if not note.is_hidden:
                     yield note
             elif child.name == 'backup':
                 yield Backup(child)
