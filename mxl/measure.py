@@ -1,5 +1,6 @@
 from note import Note
 from backup import Backup
+from collections import Counter
 
 
 class Measure(object):
@@ -22,6 +23,26 @@ class Measure(object):
     def get_melody_notes(self):
         note_layers = list(self._get_note_layers())
         return max(note_layers, key=lambda l: len(l))
+
+    def get_note_type_counts(self):
+        """Gets the number of each type of note lengths in a measure
+
+        Returns a dictionary of counts of note lengths in the measure.
+        """
+        type_counter = Counter()
+        for note in self.get_melody_notes():
+            type_counter.update([note.pitch_type])
+        return type_counter
+
+    def get_note_pitch_counts(self):
+        """Gets the number of each type of pitches in a measure
+
+        Returns a dictionary of counts of pitches in the measure.
+        """
+        pitch_counter = Counter()
+        for note in self.get_melody_notes():
+            pitch_counter.update([note.step])
+        return pitch_counter
 
     def _notes_with_backup(self):
         for child in self.bs_node.findChildren(recursive=False):
