@@ -18,7 +18,7 @@ class Note(object):
             self.pitch_type = extract_text(bs_node, 'type')
             self.step = extract_text(bs_node, 'pitch step')
             self.octave = extract_text(bs_node, 'pitch octave')
-            self.staff = extract_text(bs_node, 'staff')
+            self.staff = int(extract_text(bs_node, 'staff'))
             self.is_chord = bool(bs_node('chord'))
             self.is_hidden = is_hidden(bs_node)
             if bs_node('rest'):
@@ -29,7 +29,7 @@ class Note(object):
             self.pitch_type = pitch_type
             self.step = step
             self.octave = octave
-            self.staff = staff
+            self.staff = int(staff)
             self.is_note = is_note
 
     def should_show(self):
