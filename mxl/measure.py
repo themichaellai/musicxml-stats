@@ -31,7 +31,8 @@ class Measure(object):
         """
         type_counter = Counter()
         for note in self.get_melody_notes():
-            type_counter.update([note.pitch_type])
+            if note.is_note:
+                type_counter.update([note.pitch_type])
         return type_counter
 
     def get_note_pitch_counts(self):
@@ -41,7 +42,8 @@ class Measure(object):
         """
         pitch_counter = Counter()
         for note in self.get_melody_notes():
-            pitch_counter.update([note.step])
+            if note.is_note:
+                pitch_counter.update([note.step])
         return pitch_counter
 
     def _notes_with_backup(self):
