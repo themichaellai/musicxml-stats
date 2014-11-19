@@ -34,3 +34,12 @@ class Part(object):
         of staffs it has.
         """
         return len(set(n.staff for n in self.measures[0].notes()))
+
+    def get_melody_stat(self):
+        """Returns a number that attempts to describe the melody of the measure
+
+        The number is the average of the difference between the pitches of the
+        notes in measure of this part..
+        """
+        return (sum(m.get_melody_stat() for m in self.measures)
+            / len(self.measures))
