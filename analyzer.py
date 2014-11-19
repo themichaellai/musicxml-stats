@@ -12,10 +12,11 @@ if __name__ == '__main__':
     for staff_i in xrange(num_staffs):
         staff_num = staff_i + 1
         print 'staff number %d' % staff_num
-        print 'melody stat', mxlf.get_part(0).get_melody_stat()
+        print 'melody stat', mxlf.get_part(0).get_melody_stat(staff_num=staff_num)
         print 'part 0 note type counts:'
         for k, v in sorted(mxlf.get_part(0).get_note_type_counts(staff_num=staff_num).iteritems()):
             print '%s: %d' % (k, v)
         print 'part 0 note pitch counts:'
         for k, v in sorted(mxlf.get_part(0).get_note_pitch_counts(staff_num=staff_num).iteritems()):
             print '%s: %d' % (k, v)
+        print 'num dynamic changes: %d' % len(list(mxlf.get_part(0).get_dynamic_changes()))

@@ -66,6 +66,12 @@ class Measure(object):
         """Gets the number of staffs used in the measure"""
         return len(set(n.staff for n in self.notes()))
 
+    def get_dynamics(self):
+        """Gets all dyanmic markings in the measure"""
+        for dyn_node in self.bs_node.select('dynamics'):
+            for dynamic in dyn_node.findChildren(recursive=False):
+                yield dynamic.name
+
     def _notes_with_backup(self, staff_num=None):
         for child in self.bs_node.findChildren(recursive=False):
             if child.name == 'note':

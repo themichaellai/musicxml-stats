@@ -35,11 +35,19 @@ class Part(object):
         """
         return len(set(n.staff for n in self.measures[0].notes()))
 
-    def get_melody_stat(self):
+    def get_melody_stat(self, staff_num=None):
         """Returns a number that attempts to describe the melody of the measure
 
         The number is the average of the difference between the pitches of the
         notes in measure of this part..
         """
-        return (sum(m.get_melody_stat() for m in self.measures)
-            / len(self.measures))
+        return (sum(m.get_melody_stat(staff_num=staff_num)
+            for m in self.measures) / len(self.measures))
+
+    def get_dynamic_changes(self):
+        """Returns a generator of pairs representing (dynamic, measure #)"""
+        for i, measure in enumerate(self.get_measures()):
+            dynamics = list(measure.get_dynamics())
+            if len(dynamics) > 0:
+                for dynamic in dynamics:
+                    yield (i, dynamic)
