@@ -27,7 +27,7 @@ class Measure(object):
         The number is the sum of the difference between the pitches of the notes
         in the measure.
         """
-        notes_with_rests = self.get_melody_notes(staff_num=staff_num)
+        notes_with_rests = self.get_interesting_notes(staff_num=staff_num)
         notes = [n for n in notes_with_rests if n.is_note]
         diff_sum = 0
         for a, b in zip(notes, notes[1:]):
@@ -36,7 +36,23 @@ class Measure(object):
             return diff_sum / float(len(notes) - 1)
         return diff_sum
 
-    def get_melody_notes(self, staff_num=None):
+    def get_rhythm_stat(self, staff_num=None, take_average=False):
+        """Returns a number that attempts to describe the rhythm difference of
+        the measure
+
+        The number is the sum of the difference between the values of rhythms
+        of the notes in the measure, as assigned in RHYTHM_VALUES in note.py
+        """
+        notes_with_rests = self.get_interesting_notes(staff_num=staff_num)
+        notes = [n for n in notes_with_rests if n.is_note]
+        diff_sum = 0
+        for a, b in zip(notes, notes[1:]):
+            diff_sum += abs(a.sub_rhythm(b))
+        if take_average:
+            return diff_sum / float(len(notes) - 1)
+        return diff_sum
+
+    def get_interesting_notes(self, staff_num=None):
         note_layers = list(self._get_note_layers(staff_num=staff_num))
         return max(note_layers, key=lambda l: len(l))
 
@@ -46,9 +62,9 @@ class Measure(object):
         Returns a dictionary of counts of note lengths in the measure.
         """
         type_counter = Counter()
-        for note in self.get_melody_notes(staff_num=staff_num):
+        for note in self.get_interesting_notes(staff_num=staff_num):
             if note.is_note:
-                type_counter.update([note.pitch_type])
+                type_counter.update([note.rhythm_type])
         return type_counter
 
     def get_note_pitch_counts(self, staff_num=None):
@@ -57,7 +73,7 @@ class Measure(object):
         Returns a dictionary of counts of pitches in the measure.
         """
         pitch_counter = Counter()
-        for note in self.get_melody_notes(staff_num=staff_num):
+        for note in self.get_interesting_notes(staff_num=staff_num):
             if note.is_note:
                 pitch_counter.update([note.step])
         return pitch_counter

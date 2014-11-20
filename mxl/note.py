@@ -2,6 +2,13 @@ from util import extract_text
 
 
 NOTES = ('A', 'B', 'C', 'D', 'E', 'F', 'G')
+RHYTHM_VALUES = {
+    'whole': 1,
+    'half': 2,
+    'quarter': 4,
+    'eighth': 8,
+    'sixteenth': 16
+}
 
 def is_hidden(bs_node):
     if ('print-object' in bs_node.attrs and
@@ -11,7 +18,7 @@ def is_hidden(bs_node):
 
 class Note(object):
     def __init__(
-            self, pitch_type='', step='', octave='', staff='', is_note=True,
+            self, rhythm_type='', step='', octave='', staff='', is_note=True,
             bs_node=None):
         if bs_node:
             if bs_node('rest'):
@@ -20,19 +27,19 @@ class Note(object):
                 self.is_note = True
             self.bs_node = bs_node
             if self.is_note:
-                self.pitch_type = extract_text(bs_node, 'type')
+                self.rhythm_type = extract_text(bs_node, 'type')
                 self.step = extract_text(bs_node, 'pitch step')
                 self.octave = int(extract_text(bs_node, 'pitch octave'))
                 self.is_chord = bool(bs_node('chord'))
             else:
-                self.pitch_type = None
+                self.rhythm_type = None
                 self.step = None
                 self.octave = None
                 self.is_chord = None
             self.staff = int(extract_text(bs_node, 'staff'))
             self.is_hidden = is_hidden(bs_node)
         else:
-            self.pitch_type = pitch_type
+            self.rhythm_type = rhythm_type
             self.step = step
             self.octave = octave
             self.staff = staff
@@ -40,6 +47,9 @@ class Note(object):
 
     def should_show(self):
         return not (self.is_hidden or self.is_chord)
+
+    def sub_rhythm(self, other):
+        return RHYTHM_VALUES[self.rhythm_type] - RHYTHM_VALUES[other.rhythm_type]
 
     def __sub__(self, other):
         if other.octave == self.octave:
@@ -57,15 +67,15 @@ class Note(object):
         staff_string = 'staff %s' % self.staff if self.staff else ''
         if self.is_note:
             return '%s (%s) %s chord: %s hidden: %s' % (
-                self.step, self.pitch_type, staff_string, self.is_chord, self.is_hidden)
+                self.step, self.rhythm_type, staff_string, self.is_chord, self.is_hidden)
         else:
-            return 'rest (%s) %s' % (self.pitch_type, staff_string)
+            return 'rest (%s) %s' % (self.rhythm_type, staff_string)
 
     def __repr__(self):
         if self.is_note:
             return '<Note: %s (%s) hidden: %s>' % (
-                self.step, self.pitch_type, self.is_hidden)
+                self.step, self.rhythm_type, self.is_hidden)
         else:
             return '<Note: rest (%s) hidden: %s>' % (
-                self.pitch_type, self.is_hidden)
+                self.rhythm_type, self.is_hidden)
 

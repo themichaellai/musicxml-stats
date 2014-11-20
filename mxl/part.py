@@ -44,6 +44,16 @@ class Part(object):
         return (sum(m.get_melody_stat(staff_num=staff_num)
             for m in self.measures) / len(self.measures))
 
+    def get_rhythm_stat(self, staff_num=None):
+        """Returns a number that attempts to describe the rhythm difference of
+        the part
+
+        The number is the sum of the difference between the values of rhythms
+        of the notes in the part, as assigned in RHYTHM_VALUES in note.py
+        """
+        return (sum(m.get_rhythm_stat(staff_num=staff_num)
+            for m in self.measures) / len(self.measures))
+
     def get_dynamic_changes(self):
         """Returns a generator of pairs representing (dynamic, measure #)"""
         for i, measure in enumerate(self.get_measures()):
