@@ -52,6 +52,17 @@ class Measure(object):
             return diff_sum / float(len(notes) - 1)
         return diff_sum
 
+    def get_rhythm_stat2(self, staff_num=None, take_average=False):
+        """Returns a number that attempts to describe the rhythm difference of
+        the measure
+
+        The number is the sum of the number of notes per frame weighted
+        accordingly
+        """
+        notes_with_rests = self.get_interesting_notes(staff_num=staff_num)
+        notes = [n for n in notes_with_rests if n.is_note]
+        return sum(n.get_rhythm_value() for n in notes)
+
     def get_interesting_notes(self, staff_num=None):
         note_layers = list(self._get_note_layers(staff_num=staff_num))
         return max(note_layers, key=lambda l: len(l))

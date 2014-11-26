@@ -30,3 +30,15 @@ def extract_text(tag, child_name, css_selector=True):
 # Extracts text from adjacent nodes given the adjacent node names
 def extract_adjacent_nodes(parent_node, *node_names):
     return [extract_text(parent_node, k, False) for k in node_names]
+
+
+def time_signature_normalizer(up, low):
+    RHYTHM_NORM_VALUES = {
+        '1': 4,
+        '2': 2,
+        '4': 1,
+        '8': 2,
+        '16': 4,
+        '32': 8
+    }
+    return int(up) * (1 / float(RHYTHM_NORM_VALUES[str(low)]))

@@ -1,6 +1,7 @@
 import unittest
 
 from mxl.note import Note
+from mxl import util
 
 
 class TestNote(unittest.TestCase):
@@ -48,6 +49,16 @@ class TestNote(unittest.TestCase):
         a = Note(rhythm_type='half')
         b = Note(rhythm_type='quarter')
         self.assertEqual(b.sub_rhythm(a), 2)
+
+    def test_time_sig_normalize(self):
+        self.assertEqual(util.time_signature_normalizer(3, 8), 1.5)
+        self.assertEqual(util.time_signature_normalizer(4, 4), 4)
+        self.assertEqual(util.time_signature_normalizer(3, 4), 3)
+
+    def test_time_sig_normalize_unicode_input(self):
+        self.assertEqual(util.time_signature_normalizer(u'3', u'8'), 1.5)
+        self.assertEqual(util.time_signature_normalizer(u'4', u'4'), 4)
+        self.assertEqual(util.time_signature_normalizer(u'3', u'4'), 3)
 
 if __name__ == '__main__':
     unittest.main()

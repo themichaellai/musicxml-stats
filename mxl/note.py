@@ -7,7 +7,9 @@ RHYTHM_VALUES = {
     'half': 2,
     'quarter': 4,
     'eighth': 8,
-    'sixteenth': 16
+    'sixteenth': 16,
+    '16th': 16,
+    '32nd': 32
 }
 
 def is_hidden(bs_node):
@@ -47,6 +49,9 @@ class Note(object):
 
     def should_show(self):
         return not (self.is_hidden or self.is_chord)
+
+    def get_rhythm_value(self):
+        return RHYTHM_VALUES[self.rhythm_type]
 
     def sub_rhythm(self, other):
         return RHYTHM_VALUES[self.rhythm_type] - RHYTHM_VALUES[other.rhythm_type]
