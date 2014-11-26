@@ -9,7 +9,10 @@ RHYTHM_VALUES = {
     'eighth': 8,
     'sixteenth': 16,
     '16th': 16,
-    '32nd': 32
+    '32nd': 32,
+    '64th': 64,
+    '128th': 128,
+    '256th': 256
 }
 
 def is_hidden(bs_node):

@@ -1,3 +1,7 @@
+import string
+import re
+
+
 def key_to_string(key_tag):
     fifths, major_minor = extract_adjacent_nodes(key_tag, 'fifths', 'mode')
     return fifths, major_minor
@@ -42,3 +46,8 @@ def time_signature_normalizer(up, low):
         '32': 8
     }
     return int(up) * (1 / float(RHYTHM_NORM_VALUES[str(low)]))
+
+def filename_escape(fname):
+    valid_chars = '-_.()%s%s' % (string.ascii_letters, string.digits)
+    unwhitespaced = re.sub('\s', '-', fname)
+    return ''.join(c for c in unwhitespaced if c in valid_chars)

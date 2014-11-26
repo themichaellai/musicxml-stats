@@ -12,6 +12,10 @@ class MXLFile(object):
         self.parts = [p for s in soup('score-partwise') for p in s('part')]
         measures = [[Measure(m) for m in p('measure')] for p in self.parts]
         self.parts = [Part(ms) for ms in measures]
+        self.credits = soup('credit-words')
+
+    def song_name(self):
+        return ' '.join(self.credits[i].get_text() for i in range(min(2, len(self.credits))))
 
     def key_signature(self):
         fifths, major_minor, _, _ = extract_measure_attributes(
