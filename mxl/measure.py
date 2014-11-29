@@ -1,6 +1,7 @@
 from note import Note
 from backup import Backup
 from collections import Counter
+from util import cache
 
 
 class Measure(object):
@@ -88,6 +89,17 @@ class Measure(object):
             if note.is_note:
                 pitch_counter.update([note.step])
         return pitch_counter
+
+    @cache
+    def get_octave_counts(self, staff_num=None):
+        octave_counter = Counter()
+        for note in self.get_interesting_notes(staff_num=staff_num):
+            if note.is_note:
+                octave_counter.update([note.octave])
+        return octave_counter
+
+    def get_octave_count(self, octave_num, staff_num=None):
+        return self.get_octave_counts(staff_num)[octave_num]
 
     def get_num_staffs(self):
         """Gets the number of staffs used in the measure"""

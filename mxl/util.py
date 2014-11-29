@@ -51,3 +51,12 @@ def filename_escape(fname):
     valid_chars = '-_.()%s%s' % (string.ascii_letters, string.digits)
     unwhitespaced = re.sub('\s', '-', fname)
     return ''.join(c for c in unwhitespaced if c in valid_chars)
+
+def cache(f):
+    cached = {}
+    def wrapper(*args, **kwargs):
+        key = (args, frozenset(kwargs.items()))
+        if key not in cached:
+            cached[key] = f(*args, **kwargs)
+        return cached[key]
+    return wrapper

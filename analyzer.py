@@ -19,4 +19,7 @@ if __name__ == '__main__':
         print 'part 0 note pitch counts:'
         for k, v in sorted(mxlf.get_part(0).get_note_pitch_counts(staff_num=staff_num).iteritems()):
             print '%s: %d' % (k, v)
+        print 'part 0 note octave counts:'
+        for k, v in sorted(mxlf.get_part(0).get_note_octave_counts(staff_num=staff_num).iteritems()):
+            print '%s (%s): %d' % (k, type(k), v)
         print 'num dynamic changes: %d' % len(list(mxlf.get_part(0).get_dynamic_changes()))

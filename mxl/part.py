@@ -28,6 +28,12 @@ class Part(object):
             acc.update(measure.get_note_pitch_counts(staff_num=staff_num))
         return acc
 
+    def get_note_octave_counts(self, staff_num=None):
+        acc = Counter()
+        for measure in self.measures:
+            acc.update(measure.get_octave_counts(staff_num=staff_num))
+        return acc
+
     def get_num_staffs(self):
         """Gets the number of staffs used in the part
         Determines this by looking at the first measure and counting the mumber
