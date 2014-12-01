@@ -23,3 +23,9 @@ if __name__ == '__main__':
         for k, v in sorted(mxlf.get_part(0).get_note_octave_counts(staff_num=staff_num).iteritems()):
             print '%s (%s): %d' % (k, type(k), v)
         print 'num dynamic changes: %d' % len(list(mxlf.get_part(0).get_dynamic_changes()))
+        print 'rests:'
+        for i, measure in enumerate(mxlf.get_part(0).get_measures()):
+            rests = list(measure.rests(staff_num=staff_num))
+            if len(rests) > 0:
+                for rest in rests:
+                    print 'measure %d - %s' % (i, str(rest))

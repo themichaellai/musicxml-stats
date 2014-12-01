@@ -15,6 +15,19 @@ RHYTHM_VALUES = {
     '256th': 256
 }
 
+REST_RHYTHM_VALUES = {
+    'whole': 4,
+    'half': 2,
+    'quarter': 1,
+    'eighth': 1/2.0,
+    'sixteenth': 1/4.0,
+    '16th': 1/4.0,
+    '32nd': 1/8.0,
+    '64th': 1/16.0,
+    '128th': 1/32.0,
+    '256th': 1/64.0
+}
+
 def is_hidden(bs_node):
     if ('print-object' in bs_node.attrs and
             bs_node['print-object'] == 'no'):
@@ -37,7 +50,7 @@ class Note(object):
                 self.octave = int(extract_text(bs_node, 'pitch octave'))
                 self.is_chord = bool(bs_node('chord'))
             else:
-                self.rhythm_type = None
+                self.rhythm_type = extract_text(bs_node, 'type')
                 self.step = None
                 self.octave = None
                 self.is_chord = None
@@ -55,6 +68,9 @@ class Note(object):
 
     def get_rhythm_value(self):
         return RHYTHM_VALUES[self.rhythm_type]
+
+    def get_rest_rhythm_value(self):
+        return REST_RHYTHM_VALUES[self.rhythm_type]
 
     def sub_rhythm(self, other):
         return RHYTHM_VALUES[self.rhythm_type] - RHYTHM_VALUES[other.rhythm_type]

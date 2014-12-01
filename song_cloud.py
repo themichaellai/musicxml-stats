@@ -37,7 +37,8 @@ stats = (
     'octave4',
     'octave5',
     'octave6',
-    'octave7'
+    'octave7',
+    'restrhythm'
 )
 def main(filename):
     mxlf = MXLFile(filename)
@@ -51,6 +52,7 @@ def main(filename):
         rhythm_2 = sum_attributes('get_rhythm_stat2', measures, staff_num=1)
         octaves_tup = [[m.get_octave_count(i) for i in range(1, 8)] for m in measures]
         octaves_sum = [sum(col) for col in izip(*octaves_tup)]
+        rest_rhythm = sum_attributes('get_rest_rhythm_stat', measures, staff_num=1)
         stats = [
             melody_staff_0,
             rhythm_1,
@@ -61,7 +63,8 @@ def main(filename):
             octaves_sum[3],
             octaves_sum[4],
             octaves_sum[5],
-            octaves_sum[6]
+            octaves_sum[6],
+            rest_rhythm
         ]
         res_rows.append([s / norm_constant for s in stats])
         #res_rows.append(SEP.join(str(s / norm_constant) for s in stats))

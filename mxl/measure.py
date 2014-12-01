@@ -7,20 +7,28 @@ from util import cache
 class Measure(object):
     def __init__(self, bs_node):
         self.bs_node = bs_node
-        self._notes_cache = None
 
+    @cache
     def _notes(self):
-        if self._notes_cache == None:
-            self._notes_cache = []
-            for n in self.bs_node.select('note'):
-                self._notes_cache.append(Note(bs_node=n))
-        return self._notes_cache
+        notes = []
+        for n in self.bs_node.select('note'):
+            notes.append(Note(bs_node=n))
+        return notes
 
     def notes(self, show_hidden=False, staff_num=None):
         for note in self._notes():
             if show_hidden or note.should_show():
                 if staff_num == None or note.staff == staff_num:
                     yield note
+
+    def rests(self, show_hidden=False, staff_num=None):
+        """Returns the rests in the measure
+
+        Does not use get_interesting_notes
+        """
+        for note in self.notes(show_hidden=show_hidden, staff_num=staff_num):
+            if not note.is_note and note.rhythm_type:
+                yield note
 
     def get_melody_stat(self, staff_num=None, take_average=False):
         """Returns a number that attempts to describe the melody of the measure
@@ -64,6 +72,10 @@ class Measure(object):
         notes = [n for n in notes_with_rests if n.is_note]
         return sum(n.get_rhythm_value() for n in notes)
 
+    def get_rest_rhythm_stat(self, staff_num=None):
+        return sum(r.get_rest_rhythm_value() for r in self.rests())
+
+    @cache
     def get_interesting_notes(self, staff_num=None):
         note_layers = list(self._get_note_layers(staff_num=staff_num))
         return max(note_layers, key=lambda l: len(l))
